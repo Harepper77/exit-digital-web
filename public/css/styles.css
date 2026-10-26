@@ -118,6 +118,8 @@ p { margin: 0 0 1em; }
 .ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .ticks li { padding-left: 28px; position: relative; }
 .ticks li::before { content: ''; position: absolute; left: 0; top: .45em; width: 14px; height: 14px; border-radius: 50%; background: var(--magenta); box-shadow: 4px 0 0 -1px var(--cyan); }
+.specs { list-style: none; margin: 16px 0 0; padding: 14px 16px; background: var(--paper-2); border-radius: 10px; font-size: .92rem; color: var(--muted); display: grid; gap: 4px; }
+.files-note { max-width: 70ch; margin: 1.5rem auto 0; }
 .ticks--big li { font-size: 1.1rem; font-weight: 600; padding: 14px 16px 14px 44px; background: #fff; border-radius: 10px; box-shadow: var(--shadow); }
 .ticks--big li::before { left: 16px; top: 1.25em; }
 
@@ -127,7 +129,7 @@ p { margin: 0 0 1em; }
 .steps p { margin: 0; color: var(--muted); }
 
 .table-wrap { overflow-x: auto; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); }
-table { width: 100%; border-collapse: collapse; min-width: 520px; }
+table { width: 100%; border-collapse: collapse; min-width: 680px; }
 th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
 thead th { background: var(--ink); color: #fff; }
 tbody tr:last-child > * { border-bottom: 0; }

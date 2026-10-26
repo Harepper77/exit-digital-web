@@ -21,7 +21,7 @@ const cta = (lang, t) => `
       <p>${t.common.ctaText}</p>
       <div class="actions">
         <a class="btn btn--primary" href="${paths.quote[lang]}">${t.common.quoteNow}</a>
-        <a class="btn btn--ghost" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener">${t.whatsapp.label}</a>
+        <a class="btn btn--ghost" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
       </div>
     </div>
   </section>`;
@@ -30,9 +30,9 @@ const payButtons = (t) => {
   const p = config.payments;
   return `
     <div class="pay-buttons">
-      <a class="btn btn--pay" data-pay="stripe" href="${p.stripe}" target="_blank" rel="noopener">${t.pay.stripe}</a>
-      <a class="btn btn--pay" data-pay="paypal" href="${p.paypal}" target="_blank" rel="noopener">${t.pay.paypal}</a>
-      ${p.mercadopago ? `<a class="btn btn--pay" data-pay="mercadopago" href="${p.mercadopago}" target="_blank" rel="noopener">${t.pay.mercadopago}</a>` : ''}
+      <a class="btn btn--pay" data-pay="stripe" href="${p.stripe}" target="_blank" rel="noopener noreferrer">${t.pay.stripe}</a>
+      <a class="btn btn--pay" data-pay="paypal" href="${p.paypal}" target="_blank" rel="noopener noreferrer">${t.pay.paypal}</a>
+      ${p.mercadopago ? `<a class="btn btn--pay" data-pay="mercadopago" href="${p.mercadopago}" target="_blank" rel="noopener noreferrer">${t.pay.mercadopago}</a>` : ''}
     </div>`;
 };
 
@@ -41,6 +41,7 @@ const serviceCards = (items, full) => items.map((s, i) => `
     <h3>${s.name}</h3>
     <p>${s.text}</p>
     ${full ? `<ul class="ticks">${s.points.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
+    ${full && s.specs.length ? `<ul class="specs">${s.specs.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
   </article>`).join('');
 
 const field = (name, label, input, required) => `
@@ -112,6 +113,13 @@ export const pages = [
       </section>
       <section class="section">
         <div class="container">
+          <h2 class="section__title">${t.services.filesTitle}</h2>
+          <div class="grid grid--3">${t.services.files.map((f) => `<article class="card card--ink"><h3>${f.title}</h3><p>${f.text}</p></article>`).join('')}</div>
+          <p class="note center files-note">${t.services.filesNote}</p>
+        </div>
+      </section>
+      <section class="section section--alt">
+        <div class="container">
           <h2 class="section__title">${t.services.faqTitle}</h2>
           <div class="faq">${t.services.faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join('')}</div>
         </div>
@@ -161,7 +169,7 @@ export const pages = [
               ${field('cantidad', f.quantity, '<input id="f-cantidad" name="cantidad" type="number" min="1" inputmode="numeric" required>', true)}
               ${field('fecha', f.date, '<input id="f-fecha" name="fecha" type="date">', false)}
             </div>
-            ${field('archivo', f.file, `<input id="f-archivo" name="archivo" type="file" accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.svg,.psd" data-max-mb="8" data-error="${esc(f.fileTooBig)}"><small class="hint">${f.fileHint}</small>`, false)}
+            ${field('archivo', f.file, `<input id="f-archivo" name="archivo" type="file" accept=".png,.jpg,.jpeg,.pdf,.ai,.cdr,.eps,.svg,.psd" data-max-mb="8" data-error="${esc(f.fileTooBig)}"><small class="hint">${f.fileHint}</small>`, false)}
             ${field('comentarios', f.comments, `<textarea id="f-comentarios" name="comentarios" rows="5" required placeholder="${esc(f.commentsPlaceholder)}"></textarea>`, true)}
             <p class="note">${t.quote.privacy}</p>
             <button class="btn btn--primary" type="submit">${t.quote.submit}</button>
@@ -176,7 +184,7 @@ export const pages = [
             <div class="panel panel--whatsapp">
               <h2>${t.quote.waTitle}</h2>
               <p>${t.quote.waText}</p>
-              <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener">${t.whatsapp.label}</a>
+              <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
             </div>
           </aside>
         </div>
@@ -193,7 +201,7 @@ export const pages = [
           <article class="card card--cyan">
             <h2>WhatsApp</h2>
             <p>${t.contact.waText}</p>
-            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener">${esc(config.whatsapp)}</a>
+            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${esc(config.whatsapp)}</a>
           </article>
           <article class="card card--magenta">
             <h2>${t.contact.emailTitle}</h2>
@@ -227,7 +235,7 @@ export const pages = [
           <h1>${t.thanks.heading}</h1>
           <p class="lead">${t.thanks.text}</p>
           <div class="actions">
-            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener">${t.whatsapp.label}</a>
+            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
             <a class="btn btn--ghost" href="${paths.home[lang]}">${t.thanks.back}</a>
           </div>
         </div>

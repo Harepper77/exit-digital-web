@@ -31,12 +31,22 @@ npm run dev     # build + servidor local en http://localhost:4321
    En *Form notifications* agregar el correo de Fátima para recibir cada cotización.
 4. **Dominio**: Domain management → Add a domain → apuntar los DNS del registrador. Después cambiar `siteUrl` en `src/config.js`.
 
+## Seguridad
+- **Cabeceras** (`netlify.toml`): CSP estricta (solo recursos propios + Google Fonts, sin scripts inline),
+  HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` y `Permissions-Policy`. `npm run dev` envía las mismas.
+- **Formulario**: honeypot + filtro anti-spam de Netlify; solo acepta formatos de diseño y máximo 8 MB.
+- **Sin secretos en el repo**: los links de pago son públicos por diseño; los cobros ocurren en Stripe/PayPal, nunca en este sitio.
+- **Enlaces externos** con `rel="noopener noreferrer"`. Los tests verifican cabeceras, CSP y enlaces.
+- **Cuentas**: activar 2FA en GitHub, Netlify, Porkbun (más *domain lock* y WHOIS privacy), Stripe y PayPal.
+- Si llega spam por el formulario: Netlify → Forms → activar reCAPTCHA (requiere ajustar la CSP).
+
 ## Pagos (los crea Fátima en sus cuentas)
 - **Stripe** → Payment Links → producto "Pago de cotización" → *Let customers choose what to pay* → pegar el link en `payments.stripe`.
 - **PayPal Business** → crear PayPal.me → pegar en `payments.paypal`.
 - **Mercado Pago** (opcional) → link de pago → `payments.mercadopago` (vacío = no se muestra).
 
 ## Por confirmar con Fátima
-- Lista exacta de "Más servicios" y si usa tintas base agua (textos en `services.items`).
+- Ciudad y horario (`src/config.js`, marcados `CONFIRMAR`/`REEMPLAZAR`); links de Stripe y PayPal.
 - Tiempos típicos de respuesta y producción.
-- Datos reales en `src/config.js` (todo lo marcado `REEMPLAZAR`).
+- Fotos propias de trabajos (no usar las de personajes con licencia: Mario, Simpsons, Nirvana, Goku…).
+- Servicios tomados de su PDF "Productos y servicios" (2026-10-26).

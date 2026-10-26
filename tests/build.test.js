@@ -110,3 +110,25 @@ test('root redirects to spanish by default', () => {
   assert.match(read('index.html'), /url=\/es\//);
   assert.match(read('_redirects'), /\/\s+\/en\/\s+302!?\s+Language=en/);
 });
+
+test('netlify.toml sends security headers', () => {
+  const toml = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8');
+  for (const h of ['Content-Security-Policy', 'Strict-Transport-Security', 'X-Content-Type-Options', 'Referrer-Policy', 'Permissions-Policy', 'X-Frame-Options']) {
+    assert.match(toml, new RegExp(`${h} = `), h);
+  }
+  assert.match(toml, /frame-ancestors 'none'/);
+  assert.match(toml, /script-src 'self'[;"]/);
+  assert.match(toml, /form-action 'self'/);
+});
+
+test('pages are CSP-compatible and external links are isolated', () => {
+  for (const file of walk(out).filter((f) => f.endsWith('.html'))) {
+    const html = readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, /<script(?![^>]*\bsrc=)/, `inline script in ${file}`);
+    assert.doesNotMatch(html, /\son[a-z]+="/, `inline handler in ${file}`);
+    assert.doesNotMatch(html, /\sstyle="/, `inline style in ${file}`);
+    for (const [tag] of html.matchAll(/<a [^>]*target="_blank"[^>]*>/g)) {
+      assert.match(tag, /rel="noopener noreferrer"/, tag);
+    }
+  }
+});

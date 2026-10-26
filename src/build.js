@@ -87,7 +87,7 @@ function layout(page, lang) {
     </div>
     <p class="container site-footer__legal">© ${config.since}–${year} ${config.brand}. ${t.footer.rights}</p>
   </footer>
-  <a class="wa-float" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener" aria-label="${t.whatsapp.label}">${waIcon}</a>
+  <a class="wa-float" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer" aria-label="${t.whatsapp.label}">${waIcon}</a>
 </body>
 </html>
 `;
