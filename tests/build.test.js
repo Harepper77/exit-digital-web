@@ -156,3 +156,19 @@ test('international phone is shown in the footer', () => {
   assert.match(config.whatsapp, /^\+52 55 /);
   assert.ok(read(fileFor(pages[0].path.es)).includes(`href="tel:${config.whatsapp.replace(/\s/g, '')}"`));
 });
+
+test('brand logo is inlined from public/img/logo.svg in header and footer', () => {
+  const html = read('es/index.html');
+  const svgs = html.match(/<svg class="logo__mark"[^>]*>/g) ?? [];
+  assert.equal(svgs.length, 2);
+  for (const tag of svgs) assert.match(tag, /viewBox="8 8 234 94"/);
+  assert.ok(!html.includes('<style'), 'logo must not bring a <style> (CSP)');
+  assert.ok(html.includes('#eb008b') && html.includes('#00adee') && html.includes('#fff100'));
+});
+
+test('share and touch icons point to existing PNGs', () => {
+  const html = read('en/index.html');
+  assert.match(html, /<meta property="og:image" content="https:\/\/exit-digital\.shop\/img\/og\.png">/);
+  assert.match(html, /<link rel="apple-touch-icon" href="\/img\/apple-touch-icon\.png">/);
+  for (const f of ['img/og.png', 'img/apple-touch-icon.png', 'img/favicon.svg']) assert.ok(existsSync(join(out, f)), f);
+});
