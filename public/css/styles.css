@@ -54,10 +54,13 @@ p { margin: 0 0 1em; }
 .site-header { position: sticky; top: 0; z-index: 50; background: rgb(20 18 31 / .96); color: #fff; backdrop-filter: blur(8px); }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; min-height: 68px; padding-block: 6px; gap: 16px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 900; font-size: 1.3rem; letter-spacing: -.02em; }
-/* Logo 2.5:1 → móvil 54×134, tablet 64×159, escritorio 70 con 10 de padding (dibujo 50×124) */
-.logo__mark { display: block; width: auto; height: 54px; }
-@media (min-width: 600px) { .logo__mark { height: 64px; } }
-@media (min-width: 880px) { .logo__mark { height: 70px; padding: 10px; } }
+/* Logo 2.5:1 con aire arriba y abajo (border-box): dibujo móvil 46, tablet 56, escritorio 64 */
+.logo__mark { display: block; width: auto; height: 58px; padding-block: 6px; }
+@media (min-width: 600px) { .logo__mark { height: 72px; padding-block: 8px; } }
+@media (min-width: 880px) {
+  .logo__mark { height: 84px; padding-block: 10px; }
+  .site-header__inner { padding-block: 0; }
+}
 .nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
 .nav a { display: block; padding: 10px 14px; border-radius: 999px; text-decoration: none; font-weight: 600; }
 .nav a:hover, .nav a[aria-current="page"] { background: rgb(255 255 255 / .1); }
