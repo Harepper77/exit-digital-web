@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <pattern id="c" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="5" fill="#00b4d8"/></pattern>
+    <pattern id="m" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="21" cy="7" r="5" fill="#e5007e"/></pattern>
+    <pattern id="y" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="14" cy="21" r="5" fill="#ffd60a"/></pattern>
+    <radialGradient id="f"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+    <mask id="k"><rect width="1200" height="900" fill="url(#f)"/></mask>
+  </defs>
+  <rect width="1200" height="900" fill="#26233a"/>
+  <g mask="url(#k)" opacity=".55"><rect width="1200" height="900" fill="url(#c)"/><rect width="1200" height="900" fill="url(#m)"/><rect width="1200" height="900" fill="url(#y)"/></g>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#fff">
+    <text x="600" y="432" font-size="75" font-weight="900">FOTO · DTF</text>
+    <text x="600" y="505" font-size="30" opacity=".8">1200 × 900 px · /img/servicios/dtf.jpg</text>
+  </g>
+</svg>

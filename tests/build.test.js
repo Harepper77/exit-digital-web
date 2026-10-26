@@ -132,3 +132,27 @@ test('pages are CSP-compatible and external links are isolated', () => {
     }
   }
 });
+
+test('every image has alt text and explicit size', () => {
+  for (const file of walk(out).filter((f) => f.endsWith('.html'))) {
+    for (const [tag] of readFileSync(file, 'utf8').matchAll(/<img [^>]*>/g)) {
+      assert.match(tag, /\salt="[^"]+"/, tag);
+      assert.match(tag, /\swidth="\d+" height="\d+"/, tag);
+    }
+  }
+});
+
+test('photos appear on home, services and about', () => {
+  const imgs = (id, lang) => [...read(fileFor(pages.find((p) => p.id === id).path[lang])).matchAll(/<img /g)].length;
+  for (const lang of ['es', 'en']) {
+    assert.ok(imgs('home', lang) >= 1, 'home hero');
+    assert.equal(imgs('services', lang), config.images.services.length);
+    assert.ok(imgs('about', lang) >= 1, 'about');
+  }
+  assert.equal(config.images.services.length, es.services.items.length);
+});
+
+test('international phone is shown in the footer', () => {
+  assert.match(config.whatsapp, /^\+52 55 /);
+  assert.ok(read(fileFor(pages[0].path.es)).includes(`href="tel:${config.whatsapp.replace(/\s/g, '')}"`));
+});

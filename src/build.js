@@ -80,6 +80,7 @@ function layout(page, lang) {
       </div>
       <ul class="site-footer__nav">${navIds.map((id) => `<li><a href="${paths[id][lang]}">${t.nav[id]}</a></li>`).join('')}</ul>
       <div>
+        <p><a href="tel:${config.whatsapp.replace(/\s/g, '')}">${config.whatsapp}</a></p>
         <p><a href="mailto:${config.email}">${config.email}</a></p>
         <p>${config.city[lang]}</p>
         <p>${t.footer.payments}</p>

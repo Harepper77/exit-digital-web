@@ -36,8 +36,12 @@ const payButtons = (t) => {
     </div>`;
 };
 
+const photo = (src, [w, h], alt, cls, eager) =>
+  `<img class="${cls}" src="${src}" alt="${esc(alt)}" width="${w}" height="${h}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+
 const serviceCards = (items, full) => items.map((s, i) => `
-  <article class="card card--${['cyan', 'magenta', 'yellow', 'ink'][i % 4]}">
+  <article class="card card--${['cyan', 'magenta', 'yellow', 'ink'][i % 4]}${full ? ' card--media' : ''}">
+    ${full ? photo(config.images.services[i], config.images.servicesSize, s.name, 'card__img') : ''}
     <h3>${s.name}</h3>
     <p>${s.text}</p>
     ${full ? `<ul class="ticks">${s.points.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
@@ -56,7 +60,8 @@ export const pages = [
     path: paths.home,
     body: (lang, t) => `
       <section class="hero">
-        <div class="container hero__inner">
+        <div class="container hero__inner hero__inner--media">
+          <div class="hero__text">
           <p class="eyebrow">${t.home.eyebrow}</p>
           <h1>${t.home.heroTitle}</h1>
           <p class="lead">${t.home.heroText}</p>
@@ -65,6 +70,8 @@ export const pages = [
             <a class="btn btn--ghost" href="${paths.services[lang]}">${t.home.seeServices}</a>
           </div>
           <ul class="badges">${t.home.badges.map((b) => `<li>${b}</li>`).join('')}</ul>
+          </div>
+          <div class="hero__media">${photo(config.images.hero, config.images.heroSize, t.home.heroAlt, 'hero__img', true)}</div>
         </div>
       </section>
       <section class="section">
@@ -134,7 +141,10 @@ export const pages = [
       <section class="section">
         <div class="container split">
           <div class="prose">${t.about.story.map((p) => `<p>${p}</p>`).join('')}</div>
-          <dl class="stats">${t.about.stats.map((s) => `<div><dt>${s.label}</dt><dd>${s.value}</dd></div>`).join('')}</dl>
+          <div class="about__side">
+            ${photo(config.images.about, config.images.aboutSize, t.about.photoAlt, 'about__img')}
+            <dl class="stats">${t.about.stats.map((s) => `<div><dt>${s.label}</dt><dd>${s.value}</dd></div>`).join('')}</dl>
+          </div>
         </div>
       </section>
       <section class="section section--alt">

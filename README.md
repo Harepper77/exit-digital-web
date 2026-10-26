@@ -24,6 +24,18 @@ npm run dev     # build + servidor local en http://localhost:4321
 | Estilos y JS | `public/css/styles.css`, `public/js/main.js` |
 | Imágenes | `public/img/` |
 
+## Fotos (hoy son placeholders)
+
+| Dónde | Archivo | Tamaño |
+|---|---|---|
+| Inicio (hero, vertical) | `public/img/hero.jpg` | 1200 × 1500 |
+| Nosotros | `public/img/nosotros.jpg` | 1200 × 900 |
+| Servicios (7) | `public/img/servicios/{serigrafia,dtf,sublimacion,vinil-textil,vinil-adherible,promocionales,diseno}.jpg` | 1200 × 900 |
+
+1. Guarda la foto con ese nombre (JPG o WebP, idealmente < 300 KB).
+2. En `src/config.js` → `images`, cambia `.svg` por `.jpg` (o `.webp`) en esa ruta.
+3. `npm test` y listo. Para regenerar los placeholders: `node scripts/placeholders.js`.
+
 ## Publicar en Netlify (primera vez)
 1. Netlify → **Add new site → Import an existing project → GitHub** → este repo.
 2. Build command `npm run build`, publish directory `dist` (ya vienen en `netlify.toml`).

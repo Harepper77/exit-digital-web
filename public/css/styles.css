@@ -91,6 +91,16 @@ p { margin: 0 0 1em; }
 .hero::after { color: var(--cyan); right: 80px; bottom: -260px; }
 .hero--small { padding: clamp(56px, 10vw, 96px) 0; }
 .hero h1 { max-width: 16ch; }
+.hero__inner--media { display: grid; gap: 40px; align-items: center; }
+.hero__img { width: 100%; height: auto; max-height: 520px; object-fit: cover; border-radius: 20px; box-shadow: 0 20px 60px rgb(0 0 0 / .45); }
+@media (min-width: 960px) {
+  .hero__inner--media { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .hero__img { max-height: 600px; }
+}
+.card.card--media { padding-top: 0; overflow: hidden; }
+.card__img { width: calc(100% + 56px); max-width: none; height: auto; aspect-ratio: 4 / 3; object-fit: cover; margin: 0 -28px 22px; }
+.about__side { display: grid; gap: 16px; }
+.about__img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
 .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .85rem; font-weight: 700; color: var(--yellow); }
 .badges { list-style: none; padding: 0; margin: 2rem 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
 .badges li { border: 1px solid rgb(255 255 255 / .25); border-radius: 999px; padding: 6px 14px; font-size: .92rem; }

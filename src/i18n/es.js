@@ -27,6 +27,7 @@ export default {
     eyebrow: 'Taller de impresión textil · Desde 2009',
     heroTitle: 'Imprimimos tus ideas en ropa, vinil y promocionales',
     heroText: 'Serigrafía, DTF, sublimación y vinil para marcas, equipos, empresas y eventos. Tú nos mandas tu diseño, o lo creamos contigo, y lo enviamos a donde estés.',
+    heroAlt: 'Playera personalizada impresa por Exit-Digital',
     seeServices: 'Ver servicios',
     badges: ['+17 años de experiencia', 'Envíos a todo el mundo', 'Pago con tarjeta o PayPal'],
     servicesTitle: 'Lo que hacemos',
@@ -94,6 +95,7 @@ export default {
       { label: 'Servicios', value: 'Textil, vinil y promocionales' },
       { label: 'Hecho en', value: 'México' },
     ],
+    photoAlt: 'Taller de impresión de Exit-Digital',
     valuesTitle: 'Cómo trabajamos',
     values: [
       { title: 'Calidad que dura', text: 'Cuidamos tintas, prendas y procesos para que tu impresión resista lavada tras lavada.' },

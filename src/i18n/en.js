@@ -27,6 +27,7 @@ export default {
     eyebrow: 'Textile print studio · Since 2009',
     heroTitle: 'We print your ideas on apparel, vinyl and promo products',
     heroText: 'Screen printing, DTF, sublimation and vinyl for brands, teams, companies and events. Send us your artwork (or we design it with you) and we ship it wherever you are.',
+    heroAlt: 'Custom t-shirt printed by Exit-Digital',
     seeServices: 'See services',
     badges: ['17+ years of experience', 'Worldwide shipping', 'Pay by card or PayPal'],
     servicesTitle: 'What we do',
@@ -94,6 +95,7 @@ export default {
       { label: 'Services', value: 'Apparel, vinyl & promo' },
       { label: 'Made in', value: 'Mexico' },
     ],
+    photoAlt: 'Exit-Digital print studio',
     valuesTitle: 'How we work',
     values: [
       { title: 'Quality that lasts', text: 'We care about inks, garments and process so your print holds up wash after wash.' },
