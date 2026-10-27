@@ -40,6 +40,23 @@ Para cambiar una foto, reemplaza el archivo con el mismo nombre y proporción (J
 - **Partidas repetibles** (producto + servicio): hay `quoteItems` bloques en el HTML (`servicio_N`, `producto_N`, `color_N`, `calidad_N`, `piezas_N`).
   Netlify solo guarda campos que existen en el HTML al publicar, por eso no se crean con JS: las ocultas van `hidden disabled` y el botón (+) las muestra.
 - Los colores y calidades son provisionales hasta que Fátima confirme marcas y colores.
+- **Etiquetas únicas**: Netlify identifica los campos del aviso por su etiqueta; por eso cada etiqueta de partida
+  lleva "· Producto N" en texto oculto (`sr-only`). Si se repiten, Netlify fusiona los campos y llegan vacíos.
+
+## Correo de cotización con diseño (Resend)
+`netlify/functions/submission-created.mjs` se ejecuta con cada envío verificado (no spam) y manda el correo
+armado en `src/email.js`: siempre en español, solo las partidas llenas, botón de WhatsApp y *Responder* directo al cliente.
+El aviso sencillo de Netlify (Forms → Form notifications) se puede dejar como respaldo.
+
+Variables de entorno en Netlify (Project configuration → Environment variables, scope *Functions*):
+
+| Variable | Valor |
+|---|---|
+| `RESEND_API_KEY` | API key de Resend con permiso *Sending access* (marcar como secreta) |
+| `QUOTE_NOTIFY_TO` | Destinatarios separados por coma, p. ej. `exitdigital.diseno@gmail.com,harepper@gmail.com` |
+| `QUOTE_FROM` | `Exit-Digital <cotizaciones@exit-digital.shop>` (dominio verificado en Resend) |
+
+Después de cambiar variables hay que volver a desplegar. Errores: Netlify → Logs → Functions → `submission-created`.
 
 ## Publicar en Netlify (primera vez)
 1. Netlify → **Add new site → Import an existing project → GitHub** → este repo.

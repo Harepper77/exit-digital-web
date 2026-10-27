@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# submission-created: correo con diseño de cada cotización (Resend). Ver README.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Capa de seguridad: el sitio solo carga recursos propios + Google Fonts,
 # no puede embeberse en otros sitios y los formularios solo se envían a este dominio.
 [[headers]]
