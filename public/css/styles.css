@@ -99,6 +99,8 @@ a { color: inherit; }
 .lead { font: 500 clamp(16px, 1.5vw, 20px)/1.5 var(--head); letter-spacing: .2px; color: rgb(255 255 255 / .88); margin-bottom: 20px; }
 .hero--small { min-height: auto; }
 .hero--small .hero__inner { padding-bottom: 96px; }
+.hero--small + .hero--small { border-top: 1px solid rgb(255 255 255 / .1); }
+.hero--small + .hero--small .hero__inner { padding-top: 56px; }
 @media (max-width: 759px) {
   .hero::after { background: linear-gradient(180deg, rgb(11 10 18 / .75) 0%, rgb(11 10 18 / .85) 100%); }
   .hero__img { object-position: 75% center; }

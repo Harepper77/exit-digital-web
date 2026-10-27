@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import config from './config.js';
 import es from './i18n/es.js';
 import en from './i18n/en.js';
-import { pages, paths, anchorHref, legacyRedirects, whatsappUrl } from './pages.js';
+import { pages, paths, anchorHref, legacyRedirects, thanksPath, thanksBody, whatsappUrl } from './pages.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dict = { es, en };
@@ -70,7 +70,7 @@ function layout(page, lang) {
       </button>
       <nav id="site-nav" class="nav" aria-label="${t.nav.menu}">
         <ul>${nav}</ul>
-        <a class="lang-switch" href="${page.path[other[lang]]}" hreflang="${other[lang]}" lang="${other[lang]}" aria-label="${t.nav.switchAria}">${globeIcon}${t.nav.switchLabel}</a>
+        ${page.path[other[lang]] === page.path[lang] ? '' : `<a class="lang-switch" href="${page.path[other[lang]]}" hreflang="${other[lang]}" lang="${other[lang]}" aria-label="${t.nav.switchAria}">${globeIcon}${t.nav.switchLabel}</a>`}
       </nav>
     </div>
   </header>
@@ -126,6 +126,9 @@ export function build(out = join(root, 'dist')) {
       <div class="actions"><a class="btn btn--primary" href="/es/">${t.notFound.back}</a><a class="btn btn--ghost" href="/en/">${en.notFound.back}</a></div>
     </div></section>` };
   writeFileSync(join(out, '404.html'), layout(notFound, 'es'));
+
+  const thanks = { id: 'thanks', path: { es: thanksPath, en: thanksPath }, noindex: true, body: () => thanksBody(dict) };
+  write(out, thanksPath, layout(thanks, 'es'));
 
   // Netlify: idioma del navegador en la raíz; español por defecto. Las URLs de la versión
   // con varias páginas mandan a su sección del one-page.

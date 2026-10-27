@@ -4,8 +4,11 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 export const paths = {
   home: { es: '/es/', en: '/en/' },
-  thanks: { es: '/es/gracias/', en: '/en/thanks/' },
 };
+
+// Una sola página de gracias para ambos idiomas: Netlify guarda una sola definición por
+// nombre de formulario, y si cada idioma tuviera su destino, mostraría siempre el de uno.
+export const thanksPath = '/gracias/';
 
 // One-page: cada sección tiene un ancla por idioma.
 export const anchors = {
@@ -165,7 +168,7 @@ const quote = (lang, t) => {
       <h2 class="section__title">${t.quote.title}</h2>
       <p class="section__intro">${t.quote.intro}</p>
       <div class="quote">
-        <form class="form card" name="cotizacion" method="POST" action="${paths.thanks[lang]}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+        <form class="form card" name="cotizacion" method="POST" action="${thanksPath}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="cotizacion">
           <input type="hidden" name="idioma" value="${lang}">
           <p class="hidden"><label>No llenar / Don't fill: <input name="bot-field"></label></p>
@@ -218,26 +221,27 @@ export const pages = [
     path: paths.home,
     body: (lang, t) => [hero, services, techniques, steps, cta, about, faq, quote].map((s) => s(lang, t)).join(''),
   },
-  {
-    id: 'thanks',
-    path: paths.thanks,
-    noindex: true,
-    body: (lang, t) => `
-      <section class="hero hero--small">
-        <div class="container hero__inner">
-          <h1>${t.thanks.heading}</h1>
-          <p class="lead">${t.thanks.text}</p>
-          <div class="actions">
-            ${ext(whatsappUrl(t.whatsapp.message), 'btn btn--whatsapp', t.whatsapp.label)}
-            <a class="btn btn--ghost" href="${paths.home[lang]}">${t.thanks.back}</a>
-          </div>
-        </div>
-      </section>`,
-  },
 ];
+
+// Página de gracias bilingüe (español primero).
+export const thanksBody = (dict) => ['es', 'en'].map((lang) => {
+  const t = dict[lang];
+  return `
+  <section class="hero hero--small"${lang === 'en' ? ' lang="en"' : ''}>
+    <div class="container hero__inner">
+      <h1>${t.thanks.heading}</h1>
+      <p class="lead">${t.thanks.text}</p>
+      <div class="actions">
+        ${ext(whatsappUrl(t.whatsapp.message), 'btn btn--whatsapp', t.whatsapp.label)}
+        <a class="btn btn--ghost" href="${paths.home[lang]}">${t.thanks.back}</a>
+      </div>
+    </div>
+  </section>`;
+}).join('');
 
 // URLs de la versión con varias páginas → su sección en el one-page.
 export const legacyRedirects = [
+  ['/es/gracias/', thanksPath], ['/en/thanks/', thanksPath],
   ['/es/servicios/', anchorHref('services', 'es')], ['/en/services/', anchorHref('services', 'en')],
   ['/es/nosotros/', anchorHref('about', 'es')], ['/en/about/', anchorHref('about', 'en')],
   ['/es/cotiza/', anchorHref('quote', 'es')], ['/en/quote/', anchorHref('quote', 'en')],

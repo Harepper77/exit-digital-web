@@ -116,8 +116,8 @@ test('quote form is a Netlify form with file upload and honeypot', () => {
     assert.match(html, /netlify-honeypot="bot-field"/);
     assert.match(html, /<input(?=[^>]*type="file")(?=[^>]*name="archivo")/);
     assert.match(html, /<textarea[^>]*name="descripcion"[^>]*required/);
-    const thanks = pages.find((p) => p.id === 'thanks').path[lang];
-    assert.match(html, new RegExp(`action="${thanks}"`));
+    // Mismo destino en ambos idiomas: Netlify guarda una sola definición por nombre de formulario.
+    assert.match(html, /action="\/gracias\/"/);
   }
 });
 
@@ -134,6 +134,17 @@ test('quote items: all blocks exist in the HTML so Netlify keeps every field', (
   assert.doesNotMatch(blocks[0], /hidden|disabled/, 'first item visible');
   for (const tag of blocks.slice(1)) assert.match(tag, /hidden disabled/, tag);
   assert.match(html, /<button[^>]*class="[^"]*item-add/);
+});
+
+test('thanks page is bilingual and old thanks URLs redirect to it', () => {
+  const html = read('gracias/index.html');
+  assert.match(html, /<meta name="robots" content="noindex">/);
+  assert.ok(html.includes(es.thanks.heading) && html.includes(en.thanks.heading));
+  assert.match(html, /href="\/es\/"/);
+  assert.match(html, /href="\/en\/"/);
+  const redirects = read('_redirects');
+  assert.match(redirects, /^\/es\/gracias\/\s+\/gracias\/\s+301$/m);
+  assert.match(redirects, /^\/en\/thanks\/\s+\/gracias\/\s+301$/m);
 });
 
 test('whatsapp button on every page with prefilled message', () => {
