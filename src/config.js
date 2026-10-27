@@ -8,27 +8,29 @@ export default {
   whatsapp: '+52 55 4916 4398',
   city: { es: 'Ciudad de México (CDMX), México', en: 'Mexico City (CDMX), Mexico' },
   hours: { es: 'Lunes a viernes 9:00–18:00 · Sábado 10:00–14:00', en: 'Mon–Fri 9:00–18:00 · Sat 10:00–14:00 (Mexico City time)' }, // REEMPLAZAR
-  // Fotos: hoy son placeholders SVG. Guarda la foto real con el tamaño indicado
-  // (p. ej. public/img/servicios/dtf.jpg) y cambia aquí la extensión.
   images: {
-    hero: '/img/hero.svg',
-    heroSize: [1200, 1500],
-    about: '/img/nosotros.svg',
-    aboutSize: [1200, 900],
+    hero: '/img/hero-1440.jpg',
+    hero2x: '/img/hero-2880.jpg',
+    heroSize: [1440, 811],
+    about: '/img/nosotros.jpg',
+    aboutSize: [1173, 660],
     // Mismo orden que services.items en src/i18n
     services: [
-      '/img/servicios/serigrafia.svg',
-      '/img/servicios/dtf.svg',
-      '/img/servicios/sublimacion.svg',
-      '/img/servicios/vinil-textil.svg',
-      '/img/servicios/vinil-adherible.svg',
-      '/img/servicios/promocionales.svg',
-      '/img/servicios/diseno.svg',
+      '/img/servicios/serigrafia.jpg',
+      '/img/servicios/dtf.jpg',
+      '/img/servicios/sublimacion.jpg',
+      '/img/servicios/vinil-textil.jpg',
+      '/img/servicios/vinil-adherible.jpg',
+      '/img/servicios/promocionales.jpg',
+      '/img/servicios/diseno.jpg',
     ],
-    servicesSize: [1200, 900],
+    servicesSize: [1190, 741],
   },
+  // Formulario de cotización: cuántas partidas (producto + servicio) puede agregar el cliente.
+  // Netlify solo guarda campos que existen en el HTML, así que se generan todas de antemano.
+  quoteItems: 5,
   payments: {
-    // Stripe Payment Link con "el cliente elige el monto"
+    // Stripe Payment Link con "el cliente elige el monto". Si dice REEMPLAZAR, el botón no se muestra.
     stripe: 'https://buy.stripe.com/REEMPLAZAR',
     // PayPal.me o link de PayPal Business
     paypal: 'https://paypal.me/REEMPLAZAR',

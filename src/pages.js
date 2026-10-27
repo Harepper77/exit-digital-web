@@ -4,236 +4,219 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 export const paths = {
   home: { es: '/es/', en: '/en/' },
-  services: { es: '/es/servicios/', en: '/en/services/' },
-  about: { es: '/es/nosotros/', en: '/en/about/' },
-  quote: { es: '/es/cotiza/', en: '/en/quote/' },
-  contact: { es: '/es/contacto/', en: '/en/contact/' },
   thanks: { es: '/es/gracias/', en: '/en/thanks/' },
 };
+
+// One-page: cada sección tiene un ancla por idioma.
+export const anchors = {
+  services: { es: 'servicios', en: 'services' },
+  techniques: { es: 'tecnicas', en: 'techniques' },
+  steps: { es: 'como-funciona', en: 'how-it-works' },
+  about: { es: 'nosotros', en: 'about' },
+  faq: { es: 'preguntas', en: 'faq' },
+  quote: { es: 'cotiza', en: 'quote' },
+};
+
+export const anchorHref = (id, lang) => `${paths.home[lang]}#${anchors[id][lang]}`;
 
 export const whatsappUrl = (text) =>
   `https://wa.me/${config.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
 
-const cta = (lang, t) => `
-  <section class="cta-band">
-    <div class="container cta-band__inner">
-      <h2>${t.common.ctaTitle}</h2>
-      <p>${t.common.ctaText}</p>
+const ext = (href, cls, label) => `<a class="${cls}" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+
+const photo = (src, [w, h], alt, cls, extra = 'loading="lazy"') =>
+  `<img class="${cls}" src="${src}" alt="${esc(alt)}" width="${w}" height="${h}" ${extra} decoding="async">`;
+
+// Los links que siguen en REEMPLAZAR no se muestran.
+const payLinks = () => ['stripe', 'paypal', 'mercadopago']
+  .filter((k) => config.payments[k] && !config.payments[k].includes('REEMPLAZAR'));
+
+const hero = (lang, t) => `
+  <section class="hero">
+    ${photo(config.images.hero, config.images.heroSize, t.hero.alt, 'hero__img', `srcset="${config.images.hero} 1440w, ${config.images.hero2x} 2880w" sizes="100vw" fetchpriority="high"`)}
+    <div class="container hero__inner">
+      <p class="eyebrow">${t.hero.eyebrow}</p>
+      <h1>${t.hero.title}</h1>
+      <p class="lead">${t.hero.text}</p>
       <div class="actions">
-        <a class="btn btn--primary" href="${paths.quote[lang]}">${t.common.quoteNow}</a>
-        <a class="btn btn--ghost" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
+        <a class="btn btn--primary" href="${anchorHref('quote', lang)}">${t.hero.quote}</a>
+        <a class="btn btn--ghost" href="${anchorHref('services', lang)}">${t.hero.seeServices}</a>
       </div>
     </div>
   </section>`;
 
-const payButtons = (t) => {
-  const p = config.payments;
+const services = (lang, t) => `
+  <section class="section section--cream" id="${anchors.services[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.services.title}</h2>
+      <div class="services">${t.services.items.map((s, i) => `
+        <article class="service${i === t.services.items.length - 1 && i % 2 === 0 ? ' service--wide' : ''}">
+          ${photo(config.images.services[i], config.images.servicesSize, s.name, 'service__img')}
+          <div class="service__body">
+            <h3>${s.name}</h3>
+            <p>${s.text}</p>
+            <ul class="bullets">${s.points.map((x) => `<li>${x}</li>`).join('')}</ul>
+          </div>
+          ${s.specs.length ? `<ul class="specs">${s.specs.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
+        </article>`).join('')}
+      </div>
+    </div>
+  </section>`;
+
+const techniques = (lang, t) => `
+  <section class="section" id="${anchors.techniques[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.services.compareTitle}</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr>${t.services.compareHead.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>
+          <tbody>${t.services.compareRows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
+      </div>
+      <p class="note">${t.services.compareNote}</p>
+      <div class="table-wrap">
+        <table class="table table--files">
+          <thead><tr><th scope="col" colspan="2">${t.services.filesTitle}</th></tr></thead>
+          <tbody>${t.services.files.map((f) => `<tr><th scope="row">${f.title}</th><td>${f.text}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+      <p class="note">${t.services.filesNote}</p>
+    </div>
+  </section>`;
+
+const steps = (lang, t) => `
+  <section class="section section--cream" id="${anchors.steps[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.steps.title}</h2>
+      <ol class="steps">${t.steps.items.map((s) => `<li><h3>${s.title}</h3><p>${s.text}</p></li>`).join('')}</ol>
+    </div>
+  </section>`;
+
+const cta = (lang, t) => `
+  <section class="cta-band">
+    <div class="container cta-band__inner">
+      <h2>${t.cta.title}</h2>
+      <p>${t.cta.text}</p>
+      <div class="actions">
+        <a class="btn btn--primary" href="${anchorHref('quote', lang)}">${t.hero.quote}</a>
+        ${ext(whatsappUrl(t.whatsapp.message), 'btn btn--ghost', t.whatsapp.label)}
+      </div>
+    </div>
+  </section>`;
+
+const about = (lang, t) => `
+  <section class="section section--dark" id="${anchors.about[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.about.title}</h2>
+      <div class="about">
+        <div>
+          <div class="prose">${t.about.story.map((p) => `<p>${p}</p>`).join('')}</div>
+          <div class="values">${t.about.values.map((v, i) => `<article class="value value--${['cyan', 'magenta', 'yellow'][i % 3]}"><h3>${v.title}</h3><p>${v.text}</p></article>`).join('')}</div>
+        </div>
+        ${photo(config.images.about, config.images.aboutSize, t.about.photoAlt, 'about__img')}
+      </div>
+    </div>
+  </section>`;
+
+const faq = (lang, t) => `
+  <section class="section" id="${anchors.faq[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.faq.title}</h2>
+    </div>
+    <div class="faq">${t.faq.items.map((f, i) => `
+      <details${i === 0 ? ' open' : ''}><summary><span class="container">${f.q}</span></summary><div class="container"><p>${f.a}</p></div></details>`).join('')}
+    </div>
+  </section>`;
+
+const options = (list, choose) => `<option value="">${choose}</option>${list.map((o) => `<option>${o}</option>`).join('')}`;
+
+// Campo con etiqueta flotante sobre el borde (estilo del diseño).
+const field = (id, label, control, required, cls = '') => `
+  <div class="field${cls}">
+    <label for="${id}">${label}${required ? ' <span class="req" aria-hidden="true">*</span>' : ''}</label>
+    ${control}
+  </div>`;
+
+const item = (n, t) => {
+  const f = t.quote.fields;
+  const id = (name) => `f-${name}-${n}`;
+  const sel = (name, list) => `<select id="${id(name)}" name="${name}_${n}" required>${options(list, f.choose)}</select>`;
   return `
-    <div class="pay-buttons">
-      <a class="btn btn--pay" data-pay="stripe" href="${p.stripe}" target="_blank" rel="noopener noreferrer">${t.pay.stripe}</a>
-      <a class="btn btn--pay" data-pay="paypal" href="${p.paypal}" target="_blank" rel="noopener noreferrer">${t.pay.paypal}</a>
-      ${p.mercadopago ? `<a class="btn btn--pay" data-pay="mercadopago" href="${p.mercadopago}" target="_blank" rel="noopener noreferrer">${t.pay.mercadopago}</a>` : ''}
-    </div>`;
+    <fieldset class="item" data-item="${n}"${n > 1 ? ' hidden disabled' : ''}>
+      <legend>${t.quote.itemLabel} ${n}</legend>
+      <div class="form__grid">
+        ${field(id('servicio'), f.service, sel('servicio', t.quote.serviceOptions), true)}
+        ${field(id('producto'), f.product, sel('producto', t.quote.productOptions), true)}
+        ${field(id('color'), f.color, sel('color', t.quote.colorOptions), true)}
+        ${field(id('calidad'), f.quality, sel('calidad', t.quote.qualityOptions), true)}
+        ${field(id('piezas'), f.quantity, `<input id="${id('piezas')}" name="piezas_${n}" type="number" min="1" inputmode="numeric" required>`, true)}
+      </div>
+      ${n > 1 ? `<button class="item-remove" type="button">${t.quote.removeItem} <span aria-hidden="true">×</span><span class="sr-only"> ${t.quote.itemLabel} ${n}</span></button>` : ''}
+    </fieldset>`;
 };
 
-const photo = (src, [w, h], alt, cls, eager) =>
-  `<img class="${cls}" src="${src}" alt="${esc(alt)}" width="${w}" height="${h}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
-
-const serviceCards = (items, full) => items.map((s, i) => `
-  <article class="card card--${['cyan', 'magenta', 'yellow', 'ink'][i % 4]}${full ? ' card--media' : ''}">
-    ${full ? photo(config.images.services[i], config.images.servicesSize, s.name, 'card__img') : ''}
-    <h3>${s.name}</h3>
-    <p>${s.text}</p>
-    ${full ? `<ul class="ticks">${s.points.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
-    ${full && s.specs.length ? `<ul class="specs">${s.specs.map((x) => `<li>${x}</li>`).join('')}</ul>` : ''}
-  </article>`).join('');
-
-const field = (name, label, input, required) => `
-  <div class="field">
-    <label for="f-${name}">${label}${required ? ' <span aria-hidden="true">*</span>' : ''}</label>
-    ${input}
-  </div>`;
+const quote = (lang, t) => {
+  const f = t.quote.fields;
+  const links = payLinks();
+  const items = Array.from({ length: config.quoteItems }, (_, i) => item(i + 1, t)).join('');
+  return `
+  <section class="section section--cream" id="${anchors.quote[lang]}">
+    <div class="container">
+      <h2 class="section__title">${t.quote.title}</h2>
+      <p class="section__intro">${t.quote.intro}</p>
+      <div class="quote">
+        <form class="form card" name="cotizacion" method="POST" action="${paths.thanks[lang]}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="cotizacion">
+          <input type="hidden" name="idioma" value="${lang}">
+          <p class="hidden"><label>No llenar / Don't fill: <input name="bot-field"></label></p>
+          <h3 class="form__title">${t.quote.contactTitle}</h3>
+          <div class="form__grid">
+            ${field('f-nombre', f.name, '<input id="f-nombre" name="nombre" autocomplete="name" required>', true)}
+            ${field('f-correo', f.email, '<input id="f-correo" name="correo" type="email" autocomplete="email" required>', true)}
+            ${field('f-telefono', f.phone, '<input id="f-telefono" name="telefono" type="tel" autocomplete="tel">', false)}
+            ${field('f-pais', f.country, '<input id="f-pais" name="pais" autocomplete="country-name" required>', true)}
+          </div>
+          <h3 class="form__title">${t.quote.itemsTitle}</h3>
+          <div class="items">${items}</div>
+          <button class="btn btn--outline item-add" type="button" data-full="${esc(t.quote.itemsFull)}"><span aria-hidden="true">+</span> ${t.quote.addItem}</button>
+          <div class="form__grid">
+            ${field('f-fecha', f.date, '<input id="f-fecha" name="fecha" type="date" required>', true)}
+          </div>
+          ${field('f-descripcion', f.description, `<textarea id="f-descripcion" name="descripcion" rows="4" required placeholder="${esc(f.descriptionPlaceholder)}"></textarea>`, true)}
+          ${field('f-archivo', f.file, `
+            <div class="file">
+              <input id="f-archivo" name="archivo" type="file" accept=".png,.jpg,.jpeg,.pdf,.ai,.cdr,.eps,.svg,.psd" data-max-mb="8" data-error="${esc(f.fileTooBig)}">
+              <span class="file__button" aria-hidden="true">${f.fileButton}</span>
+              <span class="file__name" data-none="${esc(f.fileNone)}">${f.fileNone}</span>
+            </div>`, false, ' field--file')}
+          <p class="hint">${f.fileHint}</p>
+          <p class="hint">${t.quote.privacy}</p>
+          <button class="btn btn--primary" type="submit">${t.quote.submit}</button>
+        </form>
+        <aside class="quote__aside">
+          ${links.length ? `
+          <div class="card panel">
+            <h3>${t.quote.payTitle}</h3>
+            <p>${t.quote.payText}</p>
+            <div class="pay-buttons">${links.map((k) => `<a class="btn btn--block btn--${k}" data-pay="${k}" href="${config.payments[k]}" target="_blank" rel="noopener noreferrer">${t.pay[k]}</a>`).join('')}</div>
+            <p class="hint">${t.quote.payNote}</p>
+          </div>` : ''}
+          <div class="card panel">
+            <h3>${t.quote.waTitle}</h3>
+            <p>${t.quote.waText}</p>
+            ${ext(whatsappUrl(t.whatsapp.message), 'btn btn--block btn--whatsapp', t.whatsapp.label)}
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>`;
+};
 
 export const pages = [
   {
     id: 'home',
     path: paths.home,
-    body: (lang, t) => `
-      <section class="hero">
-        <div class="container hero__inner hero__inner--media">
-          <div class="hero__text">
-          <p class="eyebrow">${t.home.eyebrow}</p>
-          <h1>${t.home.heroTitle}</h1>
-          <p class="lead">${t.home.heroText}</p>
-          <div class="actions">
-            <a class="btn btn--primary" href="${paths.quote[lang]}">${t.common.quoteNow}</a>
-            <a class="btn btn--ghost" href="${paths.services[lang]}">${t.home.seeServices}</a>
-          </div>
-          <ul class="badges">${t.home.badges.map((b) => `<li>${b}</li>`).join('')}</ul>
-          </div>
-          <div class="hero__media">${photo(config.images.hero, config.images.heroSize, t.home.heroAlt, 'hero__img', true)}</div>
-        </div>
-      </section>
-      <section class="section">
-        <div class="container">
-          <h2 class="section__title">${t.home.servicesTitle}</h2>
-          <div class="grid grid--4">${serviceCards(t.services.items, false)}</div>
-          <p class="center"><a class="link-arrow" href="${paths.services[lang]}">${t.home.seeServices} →</a></p>
-        </div>
-      </section>
-      <section class="section section--alt">
-        <div class="container">
-          <h2 class="section__title">${t.home.stepsTitle}</h2>
-          <ol class="steps">${t.home.steps.map((s) => `<li><h3>${s.title}</h3><p>${s.text}</p></li>`).join('')}</ol>
-        </div>
-      </section>
-      <section class="section">
-        <div class="container split">
-          <div>
-            <h2>${t.home.worldTitle}</h2>
-            <p>${t.home.worldText}</p>
-          </div>
-          <ul class="ticks ticks--big">${t.home.worldPoints.map((x) => `<li>${x}</li>`).join('')}</ul>
-        </div>
-      </section>
-      ${cta(lang, t)}`,
-  },
-  {
-    id: 'services',
-    path: paths.services,
-    body: (lang, t) => `
-      <header class="page-head"><div class="container"><h1>${t.services.heading}</h1><p class="lead">${t.services.intro}</p></div></header>
-      <section class="section">
-        <div class="container grid grid--2">${serviceCards(t.services.items, true)}</div>
-      </section>
-      <section class="section section--alt">
-        <div class="container">
-          <h2 class="section__title">${t.services.compareTitle}</h2>
-          <div class="table-wrap">
-            <table>
-              <thead><tr>${t.services.compareHead.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>
-              <tbody>${t.services.compareRows.map((r) => `<tr><th scope="row">${r[0]}</th>${r.slice(1).map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
-            </table>
-          </div>
-          <p class="note">${t.services.compareNote}</p>
-        </div>
-      </section>
-      <section class="section">
-        <div class="container">
-          <h2 class="section__title">${t.services.filesTitle}</h2>
-          <div class="grid grid--3">${t.services.files.map((f) => `<article class="card card--ink"><h3>${f.title}</h3><p>${f.text}</p></article>`).join('')}</div>
-          <p class="note center files-note">${t.services.filesNote}</p>
-        </div>
-      </section>
-      <section class="section section--alt">
-        <div class="container">
-          <h2 class="section__title">${t.services.faqTitle}</h2>
-          <div class="faq">${t.services.faq.map((f) => `<details><summary>${f.q}</summary><p>${f.a}</p></details>`).join('')}</div>
-        </div>
-      </section>
-      ${cta(lang, t)}`,
-  },
-  {
-    id: 'about',
-    path: paths.about,
-    body: (lang, t) => `
-      <header class="page-head"><div class="container"><h1>${t.about.heading}</h1><p class="lead">${t.about.intro}</p></div></header>
-      <section class="section">
-        <div class="container split">
-          <div class="prose">${t.about.story.map((p) => `<p>${p}</p>`).join('')}</div>
-          <div class="about__side">
-            ${photo(config.images.about, config.images.aboutSize, t.about.photoAlt, 'about__img')}
-            <dl class="stats">${t.about.stats.map((s) => `<div><dt>${s.label}</dt><dd>${s.value}</dd></div>`).join('')}</dl>
-          </div>
-        </div>
-      </section>
-      <section class="section section--alt">
-        <div class="container">
-          <h2 class="section__title">${t.about.valuesTitle}</h2>
-          <div class="grid grid--3">${t.about.values.map((v, i) => `<article class="card card--${['cyan', 'magenta', 'yellow'][i % 3]}"><h3>${v.title}</h3><p>${v.text}</p></article>`).join('')}</div>
-        </div>
-      </section>
-      ${cta(lang, t)}`,
-  },
-  {
-    id: 'quote',
-    path: paths.quote,
-    body: (lang, t) => {
-      const f = t.quote.fields;
-      const opts = (list) => list.map((o) => `<option>${o}</option>`).join('');
-      return `
-      <header class="page-head"><div class="container"><h1>${t.quote.heading}</h1><p class="lead">${t.quote.intro}</p></div></header>
-      <section class="section">
-        <div class="container quote">
-          <form class="form" name="cotizacion" method="POST" action="${paths.thanks[lang]}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="cotizacion">
-            <input type="hidden" name="idioma" value="${lang}">
-            <p class="hidden"><label>No llenar / Don't fill: <input name="bot-field"></label></p>
-            <div class="form__grid">
-              ${field('nombre', f.name, '<input id="f-nombre" name="nombre" autocomplete="name" required>', true)}
-              ${field('correo', f.email, '<input id="f-correo" name="correo" type="email" autocomplete="email" required>', true)}
-              ${field('telefono', f.phone, '<input id="f-telefono" name="telefono" type="tel" autocomplete="tel">', false)}
-              ${field('pais', f.country, `<input id="f-pais" name="pais" autocomplete="country-name" required>`, true)}
-              ${field('servicio', f.service, `<select id="f-servicio" name="servicio" required><option value="">${f.choose}</option>${opts(t.quote.serviceOptions)}</select>`, true)}
-              ${field('prenda', f.garment, `<select id="f-prenda" name="prenda"><option value="">${f.choose}</option>${opts(t.quote.garmentOptions)}</select>`, false)}
-              ${field('cantidad', f.quantity, '<input id="f-cantidad" name="cantidad" type="number" min="1" inputmode="numeric" required>', true)}
-              ${field('fecha', f.date, '<input id="f-fecha" name="fecha" type="date">', false)}
-            </div>
-            ${field('archivo', f.file, `<input id="f-archivo" name="archivo" type="file" accept=".png,.jpg,.jpeg,.pdf,.ai,.cdr,.eps,.svg,.psd" data-max-mb="8" data-error="${esc(f.fileTooBig)}"><small class="hint">${f.fileHint}</small>`, false)}
-            ${field('comentarios', f.comments, `<textarea id="f-comentarios" name="comentarios" rows="5" required placeholder="${esc(f.commentsPlaceholder)}"></textarea>`, true)}
-            <p class="note">${t.quote.privacy}</p>
-            <button class="btn btn--primary" type="submit">${t.quote.submit}</button>
-          </form>
-          <aside class="quote__aside">
-            <div class="panel">
-              <h2>${t.quote.payTitle}</h2>
-              <p>${t.quote.payText}</p>
-              ${payButtons(t)}
-              <p class="note">${t.quote.payNote}</p>
-            </div>
-            <div class="panel panel--whatsapp">
-              <h2>${t.quote.waTitle}</h2>
-              <p>${t.quote.waText}</p>
-              <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
-            </div>
-          </aside>
-        </div>
-      </section>`;
-    },
-  },
-  {
-    id: 'contact',
-    path: paths.contact,
-    body: (lang, t) => `
-      <header class="page-head"><div class="container"><h1>${t.contact.heading}</h1><p class="lead">${t.contact.intro}</p></div></header>
-      <section class="section">
-        <div class="container grid grid--3">
-          <article class="card card--cyan">
-            <h2>WhatsApp</h2>
-            <p>${t.contact.waText}</p>
-            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${esc(config.whatsapp)}</a>
-          </article>
-          <article class="card card--magenta">
-            <h2>${t.contact.emailTitle}</h2>
-            <p>${t.contact.emailText}</p>
-            <a class="btn btn--ghost" href="mailto:${config.email}">${config.email}</a>
-          </article>
-          <article class="card card--yellow">
-            <h2>${t.contact.whereTitle}</h2>
-            <p>${config.city[lang]}</p>
-            <p>${config.hours[lang]}</p>
-            <p class="note">${t.contact.shipping}</p>
-          </article>
-        </div>
-      </section>
-      <section class="section section--alt">
-        <div class="container panel panel--wide">
-          <h2>${t.contact.payTitle}</h2>
-          <p>${t.contact.payText}</p>
-          ${payButtons(t)}
-        </div>
-      </section>
-      ${cta(lang, t)}`,
+    body: (lang, t) => [hero, services, techniques, steps, cta, about, faq, quote].map((s) => s(lang, t)).join(''),
   },
   {
     id: 'thanks',
@@ -245,10 +228,18 @@ export const pages = [
           <h1>${t.thanks.heading}</h1>
           <p class="lead">${t.thanks.text}</p>
           <div class="actions">
-            <a class="btn btn--whatsapp" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer">${t.whatsapp.label}</a>
+            ${ext(whatsappUrl(t.whatsapp.message), 'btn btn--whatsapp', t.whatsapp.label)}
             <a class="btn btn--ghost" href="${paths.home[lang]}">${t.thanks.back}</a>
           </div>
         </div>
       </section>`,
   },
+];
+
+// URLs de la versión con varias páginas → su sección en el one-page.
+export const legacyRedirects = [
+  ['/es/servicios/', anchorHref('services', 'es')], ['/en/services/', anchorHref('services', 'en')],
+  ['/es/nosotros/', anchorHref('about', 'es')], ['/en/about/', anchorHref('about', 'en')],
+  ['/es/cotiza/', anchorHref('quote', 'es')], ['/en/quote/', anchorHref('quote', 'en')],
+  ['/es/contacto/', anchorHref('quote', 'es')], ['/en/contact/', anchorHref('quote', 'en')],
 ];

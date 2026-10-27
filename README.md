@@ -15,26 +15,31 @@ npm run dev     # build + servidor local en http://localhost:4321
 
 ## Dónde se edita cada cosa
 
+Es un **one-page** (`/es/` y `/en/`): el menú son anclas a cada sección. Diseño fuente: [Figma](https://www.figma.com/design/KKb167iWQIIEwGuspljaQq/Exit-Digital).
+
 | Qué | Archivo |
 |---|---|
-| WhatsApp, correo, ciudad, horario, links de pago, dominio | `src/config.js` |
-| Textos en español / inglés | `src/i18n/es.js`, `src/i18n/en.js` (mismas claves en ambos; los tests lo verifican) |
-| Estructura de cada página y URLs | `src/pages.js` |
+| WhatsApp, correo, ciudad, horario, links de pago, dominio, número de partidas del formulario | `src/config.js` |
+| Textos en español / inglés (incluye opciones de servicio, producto, color y calidad) | `src/i18n/es.js`, `src/i18n/en.js` (mismas claves en ambos; los tests lo verifican) |
+| Secciones, anclas y redirecciones de URLs viejas | `src/pages.js` |
 | Layout (header, footer, `<head>`) | `src/build.js` |
 | Estilos y JS | `public/css/styles.css`, `public/js/main.js` |
 | Imágenes | `public/img/` |
 
-## Fotos (hoy son placeholders)
+## Fotos
 
 | Dónde | Archivo | Tamaño |
 |---|---|---|
-| Inicio (hero, vertical) | `public/img/hero.jpg` | 1200 × 1500 |
-| Nosotros | `public/img/nosotros.jpg` | 1200 × 900 |
-| Servicios (7) | `public/img/servicios/{serigrafia,dtf,sublimacion,vinil-textil,vinil-adherible,promocionales,diseno}.jpg` | 1200 × 900 |
+| Hero | `public/img/hero-1440.jpg` y `hero-2880.jpg` (pantallas retina) | 1440 × 811 / 2888 × 1626 |
+| Nosotros | `public/img/nosotros.jpg` | 1173 × 660 |
+| Servicios (7) | `public/img/servicios/{serigrafia,dtf,sublimacion,vinil-textil,vinil-adherible,promocionales,diseno}.jpg` | 1190 × 741 |
 
-1. Guarda la foto con ese nombre (JPG o WebP, idealmente < 300 KB).
-2. En `src/config.js` → `images`, cambia `.svg` por `.jpg` (o `.webp`) en esa ruta.
-3. `npm test` y listo. Para regenerar los placeholders: `node scripts/placeholders.js`.
+Para cambiar una foto, reemplaza el archivo con el mismo nombre y proporción (JPG, idealmente < 300 KB) y corre `npm test`.
+
+## Formulario de cotización
+- **Partidas repetibles** (producto + servicio): hay `quoteItems` bloques en el HTML (`servicio_N`, `producto_N`, `color_N`, `calidad_N`, `piezas_N`).
+  Netlify solo guarda campos que existen en el HTML al publicar, por eso no se crean con JS: las ocultas van `hidden disabled` y el botón (+) las muestra.
+- Los colores y calidades son provisionales hasta que Fátima confirme marcas y colores.
 
 ## Publicar en Netlify (primera vez)
 1. Netlify → **Add new site → Import an existing project → GitHub** → este repo.

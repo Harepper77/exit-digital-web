@@ -4,12 +4,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import config from './config.js';
 import es from './i18n/es.js';
 import en from './i18n/en.js';
-import { pages, paths, whatsappUrl } from './pages.js';
+import { pages, paths, anchorHref, legacyRedirects, whatsappUrl } from './pages.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dict = { es, en };
 const other = { es: 'en', en: 'es' };
-const navIds = ['home', 'services', 'about', 'quote', 'contact'];
+const navIds = ['services', 'about', 'faq', 'quote'];
 const year = new Date().getFullYear();
 
 // Logo oficial (public/img/logo.svg): el negro es currentColor para que en el footer salga blanco.
@@ -20,6 +20,8 @@ const logoSvg = readFileSync(join(root, 'public/img/logo.svg'), 'utf8')
 const logo = (lang) => `
   <a class="logo" href="${paths.home[lang]}" aria-label="${config.brand}">${logoSvg}</a>`;
 
+const globeIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-9 9h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></svg>';
+
 const waIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>';
 
 function layout(page, lang) {
@@ -27,9 +29,8 @@ function layout(page, lang) {
   const meta = t[page.id];
   const url = (l) => `${config.siteUrl}${page.path[l]}`;
   const nav = navIds.map((id) => {
-    const current = id === page.id ? ' aria-current="page"' : '';
     const cls = id === 'quote' ? ' class="nav__cta"' : '';
-    return `<li><a${cls} href="${paths[id][lang]}"${current}>${t.nav[id]}</a></li>`;
+    return `<li><a${cls} href="${anchorHref(id, lang)}">${t.nav[id]}</a></li>`;
   }).join('');
 
   return `<!doctype html>
@@ -55,7 +56,7 @@ function layout(page, lang) {
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500&display=swap">
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/main.js" defer></script>
 </head>
@@ -69,7 +70,7 @@ function layout(page, lang) {
       </button>
       <nav id="site-nav" class="nav" aria-label="${t.nav.menu}">
         <ul>${nav}</ul>
-        <a class="lang-switch" href="${page.path[other[lang]]}" hreflang="${other[lang]}" lang="${other[lang]}" aria-label="${t.nav.switchAria}">${t.nav.switchLabel}</a>
+        <a class="lang-switch" href="${page.path[other[lang]]}" hreflang="${other[lang]}" lang="${other[lang]}" aria-label="${t.nav.switchAria}">${globeIcon}${t.nav.switchLabel}</a>
       </nav>
     </div>
   </header>
@@ -82,7 +83,7 @@ function layout(page, lang) {
         ${logo(lang)}
         <p>${t.footer.tagline}</p>
       </div>
-      <ul class="site-footer__nav">${navIds.map((id) => `<li><a href="${paths[id][lang]}">${t.nav[id]}</a></li>`).join('')}</ul>
+      <ul class="site-footer__nav">${navIds.map((id) => `<li><a href="${anchorHref(id, lang)}">${t.footerNav[id]}</a></li>`).join('')}</ul>
       <div>
         <p><a href="tel:${config.whatsapp.replace(/\s/g, '')}">${config.whatsapp}</a></p>
         <p><a href="mailto:${config.email}">${config.email}</a></p>
@@ -90,7 +91,7 @@ function layout(page, lang) {
         <p>${t.footer.payments}</p>
       </div>
     </div>
-    <p class="container site-footer__legal">© ${config.since}–${year} ${config.brand}. ${t.footer.rights}</p>
+    <div class="site-footer__legal"><p class="container">© ${config.since}–${year} ${config.brand}. ${t.footer.rights}</p></div>
   </footer>
   <a class="wa-float" href="${whatsappUrl(t.whatsapp.message)}" target="_blank" rel="noopener noreferrer" aria-label="${t.whatsapp.label}">${waIcon}</a>
 </body>
@@ -126,8 +127,13 @@ export function build(out = join(root, 'dist')) {
     </div></section>` };
   writeFileSync(join(out, '404.html'), layout(notFound, 'es'));
 
-  // Netlify: idioma del navegador en la raíz; español por defecto.
-  writeFileSync(join(out, '_redirects'), '/  /en/  302!  Language=en\n/  /es/  302!\n');
+  // Netlify: idioma del navegador en la raíz; español por defecto. Las URLs de la versión
+  // con varias páginas mandan a su sección del one-page.
+  writeFileSync(join(out, '_redirects'), [
+    '/  /en/  302!  Language=en',
+    '/  /es/  302!',
+    ...legacyRedirects.map(([from, to]) => `${from}  ${to}  301`),
+  ].join('\n') + '\n');
   return out;
 }
 
