@@ -57,8 +57,7 @@ if (form && add) {
   const sync = () => {
     const visible = items.filter((it) => !it.hidden);
     visible.forEach((it, i) => {
-      const legend = it.querySelector('legend');
-      legend.textContent = legend.textContent.replace(/\d+$/, String(i + 1));
+      it.querySelectorAll('.item-n').forEach((el) => { el.textContent = String(i + 1); });
     });
     const isFull = visible.length === items.length;
     add.hidden = isFull;

@@ -147,6 +147,16 @@ test('thanks page is bilingual and old thanks URLs redirect to it', () => {
   assert.match(redirects, /^\/en\/thanks\/\s+\/gracias\/\s+301$/m);
 });
 
+test('quote form labels are unique (Netlify keys notification fields by label)', () => {
+  for (const lang of ['es', 'en']) {
+    const form = home(lang).match(/<form[\s\S]*<\/form>/)[0];
+    const labels = [...form.matchAll(/<label[^>]*>([\s\S]*?)<\/label>/g)]
+      .map(([, inner]) => inner.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim());
+    const dupes = labels.filter((l, i) => labels.indexOf(l) !== i);
+    assert.deepEqual(dupes, [], lang);
+  }
+});
+
 test('whatsapp button on every page with prefilled message', () => {
   const digits = config.whatsapp.replace(/\D/g, '');
   for (const page of pages) {

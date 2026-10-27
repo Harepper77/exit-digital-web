@@ -143,18 +143,21 @@ const field = (id, label, control, required, cls = '') => `
 const item = (n, t) => {
   const f = t.quote.fields;
   const id = (name) => `f-${name}-${n}`;
+  // El número de partida va en la etiqueta (oculto a la vista): Netlify identifica los campos
+  // por su etiqueta y fusionaría los de todas las partidas si fueran iguales.
+  const label = (text) => `${text}<span class="sr-only"> · ${t.quote.itemLabel} <span class="item-n">${n}</span></span>`;
   const sel = (name, list) => `<select id="${id(name)}" name="${name}_${n}" required>${options(list, f.choose)}</select>`;
   return `
     <fieldset class="item" data-item="${n}"${n > 1 ? ' hidden disabled' : ''}>
-      <legend>${t.quote.itemLabel} ${n}</legend>
+      <legend>${t.quote.itemLabel} <span class="item-n">${n}</span></legend>
       <div class="form__grid">
-        ${field(id('servicio'), f.service, sel('servicio', t.quote.serviceOptions), true)}
-        ${field(id('producto'), f.product, sel('producto', t.quote.productOptions), true)}
-        ${field(id('color'), f.color, sel('color', t.quote.colorOptions), true)}
-        ${field(id('calidad'), f.quality, sel('calidad', t.quote.qualityOptions), true)}
-        ${field(id('piezas'), f.quantity, `<input id="${id('piezas')}" name="piezas_${n}" type="number" min="1" inputmode="numeric" required>`, true)}
+        ${field(id('servicio'), label(f.service), sel('servicio', t.quote.serviceOptions), true)}
+        ${field(id('producto'), label(f.product), sel('producto', t.quote.productOptions), true)}
+        ${field(id('color'), label(f.color), sel('color', t.quote.colorOptions), true)}
+        ${field(id('calidad'), label(f.quality), sel('calidad', t.quote.qualityOptions), true)}
+        ${field(id('piezas'), label(f.quantity), `<input id="${id('piezas')}" name="piezas_${n}" type="number" min="1" inputmode="numeric" required>`, true)}
       </div>
-      ${n > 1 ? `<button class="item-remove" type="button">${t.quote.removeItem} <span aria-hidden="true">×</span><span class="sr-only"> ${t.quote.itemLabel} ${n}</span></button>` : ''}
+      ${n > 1 ? `<button class="item-remove" type="button">${t.quote.removeItem} <span aria-hidden="true">×</span><span class="sr-only"> ${t.quote.itemLabel} <span class="item-n">${n}</span></span></button>` : ''}
     </fieldset>`;
 };
 
