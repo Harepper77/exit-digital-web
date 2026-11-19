@@ -20,7 +20,7 @@ export default {
   },
   hero: {
     eyebrow: 'Taller de impresión digital · Desde 2009',
-    title: 'Imprimimos tus ideas en ropa, vinil y promocionales',
+    title: 'Imprimimos tus ideas en ropa, vinil y promocionales.',
     text: 'Serigrafía, DTF, sublimación y vinil para marcas, equipos, empresas y eventos. Tú nos mandas tu diseño, o lo creamos contigo, y lo enviamos a donde estés.',
     alt: 'Playeras, sudadera, bolsa, taza, jersey y stickers impresos por Exit-Digital',
     quote: 'Nueva cotización',
